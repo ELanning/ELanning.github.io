@@ -3,4 +3,23 @@ layout: me
 title: me
 ---
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla lobortis placerat enim nec cursus. Ut et elit congue, facilisis dui id, efficitur velit. Integer faucibus velit varius arcu consectetur aliquam. Sed dui ante, euismod non malesuada vel, suscipit vel elit. Nullam tempor vehicula urna, sed dignissim ligula hendrerit in. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin et nisi eget nunc vehicula posuere. Nam elementum finibus auctor. Suspendisse a mauris et arcu molestie egestas sed et dolor. Nullam ut est tristique, iaculis tortor non, viverra felis. Praesent a tincidunt tellus, eget congue eros. Mauris non libero nec ipsum ultricies tincidunt sit amet nec ante. Duis molestie sem at ligula rhoncus viverra. Pellentesque sit amet tortor euismod, rhoncus lacus a, sodales odio. Proin ac convallis ipsum. Cras tincidunt mollis consequat.
+# Greetings!
+
+Welcome to my hideously tacky personal site. It is not mobile friendly. It is not minimal.
+
+Engineers have a proclivity for minimalism. Probably because Google has a proclivity for minimalism, as does Apple.
+There is nothing wrong with this, and it has many advantages. I have been to countless sites of many talented Software Developers.
+They all look great, are readable, and simple. They feature fun to read experiences of the hot new technologies.
+ Yet, truthfully, most are utterly forgettable.
+ This site is not any of that. It is not easy to read the posts, especially on mobile, because of the clunky UI.
+ However, my face punching site is _possibly_ memorable, and that's really all I'm aiming for.
+ I want to be that guy with the terrible Windows 95 theme, who posts archaic stuff that no one has time to read, and really, even if they did, they wouldn't be doing it on such an ugly site.
+
+Thank you,
+
+**Erik Lanning**
+
+**cs@eriklanning.com**
+
+p.s.
+Why didn't I use me@eriklanning.com? Maybe someday I'll set that up.
