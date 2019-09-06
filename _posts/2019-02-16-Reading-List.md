@@ -8,6 +8,15 @@ tags: reading list book
 
 I am leaving out most of my mandatory undergrad reading books except for Algorithms 3rd edition, for simplicities sake. These were all read on my own free time.
 
+- Programming
+  - C
+  - C++
+  - Python
+  - C#
+  - JavaScript
+- Math
+- Artificial Intelligence
+
 # Programming Books
 
 ## The Elements of Programming Style by Brian Kernighan and P. J. Plauger
