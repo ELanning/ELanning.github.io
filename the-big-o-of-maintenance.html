@@ -1,0 +1,249 @@
+
+      <html>
+        <head>
+          <title>the-big-o-of-maintenance.md</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+        </head>
+        <body>
+          <div id='content'>
+      <h1 id="the-big-o-of-maintenance">The Big-O of Maintenance</h1>
+<p>A large part of a projects lifetime is maintenance, with estimates at 60% to 80%.¹ That statistic defines maintenance as fixing bugs, and adding new functionality to an existing system.<br />
+With so much time spent on this phase, it's important to keep in mind: code itself grows and changes with respect to Big-O notation.</p>
+<p>If adding a new features requires all modules to add a new reference, that's <code>O(n)</code>.<br />
+If adding a new feature requires one module to add one new reference, that's <code>O(1)</code>. Not bad.<br />
+If adding a new feature requires one module to add one new reference, but it's a massive "kitchen sink" module: probably not good.</p>
+<p>This is a laid back and informal use of Big-O, but it gets the point across. If code is setup such that most changes are <code>O(1)</code>, much pain can be prevented.</p>
+<p>I am also being loosey-goosey with what a "module" and "reference" is, that's on purpose. The interpretation is context and project dependent, but you'll know it when you see it.</p>
+<p>Take for example this bit of pseudo-code,</p>
+<pre><code>function doSomeCoolStuff(Comment comment) {
+    ...
+    string url;
+    switch (comment.kind)
+        "baz": url = "https://foo.com",
+        "bop": url = "https://bop.com",
+        ...
+    ...
+}
+</code></pre>
+<p>We can immediately see, every time a new comment kind is added, this code likely needs to be <em>maintained</em>. If there's <code>n</code> different switch statements throughout the codebase, that's <code>n</code> different places to update.<br />
+It is worth mentioning, there is nothing inherently wrong with switch statements like these. They're normally straightforward, simple, and maintainable, but sometimes the alternatives are better.</p>
+<p>There are a few immediate (among many) ways to "extract" this switch out, such that future updates may only require changing one place.</p>
+<ol>
+<li>A simple function approach. Just move the code into a shared function somewhere.</li>
+</ol>
+<pre><code>function doSomeCoolStuff(Comment comment) {
+    ...
+    string url = getUrl(comment.kind);
+    ...
+}
+</code></pre>
+<ol start="2">
+<li>A function passing approach. Function passing is a great way to create flexibility and move logic elsewhere.</li>
+</ol>
+<pre><code>function doSomeCoolStuff(Comment comment, Lambda getUrl) {
+    ...
+    string url = getUrl();
+    ...
+}
+</code></pre>
+<ol start="3">
+<li>A polymorphism/interface approach. Also a valid option that makes good sense in some situations.</li>
+</ol>
+<pre><code>function doSomeCoolStuff(Comment comment) {
+    ...
+    string url = comment.getUrl(); // Changes based on the underlying implementation, eg `PostComment`, `NewsFeedComment`, etc.
+    ...
+}
+</code></pre>
+<p>All we've done is move complexity around. Sometimes this is all it takes to reduce overall complexity. If all of these <code>switch</code> statements are moved to one central place, we can get a big win by having updates only change one place. More so if it reduces some duplication, or allows us to calculate some value only once.</p>
+<p>Related concepts: <a href="http://www.catb.org/~esr/writings/taoup/html/ch04s02.html#spot_rule">DRY</a>, <a href="https://wiki.c2.com/?SingleResponsibilityPrinciple">SRP</a>, <a href="https://wiki.c2.com/?DependencyInversionPrinciple">DIP</a>.</p>
+<p>¹ Facts and Fallacies of Software Engineering (2002)</p>
+
+          </div>
+          <style type='text/css'>body {
+  font: 400 16px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #111;
+  background-color: #fdfdfd;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-feature-settings: "kern" 1;
+  -moz-font-feature-settings: "kern" 1;
+  -o-font-feature-settings: "kern" 1;
+  font-feature-settings: "kern" 1;
+  font-kerning: normal;
+  padding: 30px;
+}
+
+@media only screen and (max-width: 600px) {
+  body {
+    padding: 5px;
+  }
+
+  body > #content {
+    padding: 0px 20px 20px 20px !important;
+  }
+}
+
+body > #content {
+  margin: 0px;
+  max-width: 900px;
+  border: 1px solid #e1e4e8;
+  padding: 10px 40px;
+  padding-bottom: 20px;
+  border-radius: 2px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+hr {
+  color: #bbb;
+  background-color: #bbb;
+  height: 1px;
+  flex: 0 1 auto;
+  margin: 1em 0;
+  padding: 0;
+  border: none;
+}
+
+/**
+ * Links
+ */
+a {
+  color: #0366d6;
+  text-decoration: none; }
+  a:visited {
+    color: #0366d6; }
+  a:hover {
+    color: #0366d6;
+    text-decoration: underline; }
+
+pre {
+  background-color: #f6f8fa;
+  border-radius: 3px;
+  font-size: 85%;
+  line-height: 1.45;
+  overflow: auto;
+  padding: 16px;
+}
+
+/**
+  * Code blocks
+  */
+
+code {
+  background-color: rgba(27,31,35,.05);
+  border-radius: 3px;
+  font-size: 85%;
+  margin: 0;
+  word-wrap: break-word;
+  padding: .2em .4em;
+  font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+}
+
+pre > code {
+  background-color: transparent;
+  border: 0;
+  display: inline;
+  line-height: inherit;
+  margin: 0;
+  overflow: visible;
+  padding: 0;
+  word-wrap: normal;
+  font-size: 100%;
+}
+
+
+/**
+ * Blockquotes
+ */
+blockquote {
+  margin-left: 30px;
+  margin-top: 0px;
+  margin-bottom: 16px;
+  border-left-width: 3px;
+  padding: 0 1em;
+  color: #828282;
+  border-left: 4px solid #e8e8e8;
+  padding-left: 15px;
+  font-size: 18px;
+  letter-spacing: -1px;
+  font-style: italic;
+}
+blockquote * {
+  font-style: normal !important;
+  letter-spacing: 0;
+  color: #6a737d !important;
+}
+
+/**
+ * Tables
+ */
+table {
+  border-spacing: 2px;
+  display: block;
+  font-size: 14px;
+  overflow: auto;
+  width: 100%;
+  margin-bottom: 16px;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+td {
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+}
+
+th {
+  font-weight: 600;
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+}
+
+tr {
+  background-color: #fff;
+  border-top: 1px solid #c6cbd1;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+
+/**
+ * Others
+ */
+
+img {
+  max-width: 100%;
+}
+
+p {
+  line-height: 24px;
+  font-weight: 400;
+  font-size: 16px;
+  color: #24292e; }
+
+ul {
+  margin-top: 0; }
+
+li {
+  color: #24292e;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5; }
+
+li + li {
+  margin-top: 0.25em; }
+
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  color: #24292e; }
+
+a:visited {
+  color: #0366d6; }
+
+h1, h2, h3 {
+  border-bottom: 1px solid #eaecef;
+  color: #111;
+  /* Darker */ }</style>
+        </body>
+      </html>

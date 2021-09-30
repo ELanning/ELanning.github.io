@@ -1,18 +1,4 @@
-
-      <html>
-        <head>
-          <title>index.md</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-        </head>
-        <body>
-          <div id='content'>
-      <h1 id="blogs">Blogs</h1>
-<ul>
-<li><a href="the-big-o-of-maintenance.html">The Big-O of Maintenance</a></li>
-</ul>
-
-          </div>
-          <style type='text/css'>body {
+body {
   font: 400 16px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #111;
   background-color: #fdfdfd;
@@ -196,6 +182,4 @@ a:visited {
 h1, h2, h3 {
   border-bottom: 1px solid #eaecef;
   color: #111;
-  /* Darker */ }</style>
-        </body>
-      </html>
+  /* Darker */ }
