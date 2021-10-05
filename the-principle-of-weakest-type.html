@@ -1,0 +1,249 @@
+
+      <html>
+        <head>
+          <title>the-principle-of-weakest-type.md</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+        </head>
+        <body>
+          <div id='content'>
+      <h1 id="the-principle-of-weakest-type">The Principle of Weakest Type</h1>
+<p>Code should use the least powerful type that meets the requirements.</p>
+<p>The hierarchy looks something like this.</p>
+<ol>
+<li>Class</li>
+<li>Function, <a href="https://en.wikipedia.org/wiki/Passive_data_structure">POD</a> Struct, Record</li>
+<li>Tuple, Dictionary, List, …</li>
+<li>string, int, float, bool, …</li>
+</ol>
+<p>Classes are great at encapsulation and state management. Some code takes it too far.</p>
+<pre><code>class Foo {
+   public int GetBar() { return this.bar; }
+   public int GetBaz() { return this.baz; }
+   private int bar;
+   private int baz;
+}
+</code></pre>
+<p>No need for this verbose boilerplate and unnecessary "data hiding". A struct would work fine or a record if you want immutability. Assuming this isn't a widely used 3rd party library, when the requirements change and encapsulation or state management is needed, a struct can be refactored into a class. By using a less powerful type, we've communicated that this is just plain old data. Nothing magical is going on underneath the hood. That information is valuable to readers.</p>
+<p>Another common example are "strategy" classes which have an interface such as <code>IThingDoer</code> with a single function, such as <code>DoThing</code>.  Sometimes that's fine, but maybe a lambda would have worked better,</p>
+<pre><code>doSomeCoolStuff(IThingDoer strategy);
+
+// Becomes
+doSomeCoolStuff(lambda strategy);
+</code></pre>
+<p>No need for an entire class which implements a single method.</p>
+<p>Structs and records are great at letting the author add additional context <em>into the types name</em>. If the language supports constructors on these types, they can guarantee certain properties. Take for example <code>PlushieOrder</code></p>
+<pre><code>struct PlushieOrder {
+    constructor(string productGuid) {
+        // throw if productGuid is incorrect format.
+    }
+    money amountBilled;
+    string productGuid;
+    string couponGuid;
+    date billDate;
+}
+</code></pre>
+<p>By putting this into a struct with a smart constructor, all callers can use <code>PlushieOrder</code> and get a nice bundle of validated data. They don't need to revalidate any of the properties. There's a few cooler things one can do with smart constructors, but we'll leave that out for now.</p>
+<p>Some code takes structs (or records) too far.</p>
+<pre><code>struct Point {
+    int x;
+    int y;
+}
+</code></pre>
+<p>In some cases, the above struct is perfectly fine. But maybe a simple named tuple would be better: <code>(int x, int y) getPosition();</code>. A struct lets you give a thing a name. Names are powerful things, but some things needn't be named. In fact, sometimes names can get in the way. <code>getPosition</code> returns a tuple and is perfectly understandable. A dictionary can often serve the same purpose.</p>
+<p>Functions are a powerful tool. By taking a function as a parameter, things like lazy evaluation and other neat stuff can be done,</p>
+<pre><code>function doCoolStuff(Lambda getUsername());
+</code></pre>
+<p>If <code>getUsername</code> is only used sometimes and is a costly operation, say a network request, then <code>doCoolStuff</code> can get a big win by evaluating it when it needs to. Perhaps at an opportune time.</p>
+<p>However, if that's not the case, perhaps a primitive would do just fine.</p>
+<p><code>function doCoolStuff(string username);</code></p>
+<p>Interestingly enough, sometimes the <em>reverse</em> of this rule is not followed. A dictionary is used where a struct was needed to add context for the reader. Or a struct is badly doing the job of a class.</p>
+<p>The language itself can often dictate conventions as well. In JavaScript, classes aren't used too much. In Java, classes are probably <a href="http://steve-yegge.blogspot.com/2006/03/execution-in-kingdom-of-nouns.html"><em>overused</em></a> due to language design.</p>
+
+          </div>
+          <style type='text/css'>body {
+  font: 400 16px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #111;
+  background-color: #fdfdfd;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-feature-settings: "kern" 1;
+  -moz-font-feature-settings: "kern" 1;
+  -o-font-feature-settings: "kern" 1;
+  font-feature-settings: "kern" 1;
+  font-kerning: normal;
+  padding: 30px;
+}
+
+@media only screen and (max-width: 600px) {
+  body {
+    padding: 5px;
+  }
+
+  body > #content {
+    padding: 0px 20px 20px 20px !important;
+  }
+}
+
+body > #content {
+  margin: 0px;
+  max-width: 900px;
+  border: 1px solid #e1e4e8;
+  padding: 10px 40px;
+  padding-bottom: 20px;
+  border-radius: 2px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+hr {
+  color: #bbb;
+  background-color: #bbb;
+  height: 1px;
+  flex: 0 1 auto;
+  margin: 1em 0;
+  padding: 0;
+  border: none;
+}
+
+/**
+ * Links
+ */
+a {
+  color: #0366d6;
+  text-decoration: none; }
+  a:visited {
+    color: #0366d6; }
+  a:hover {
+    color: #0366d6;
+    text-decoration: underline; }
+
+pre {
+  background-color: #f6f8fa;
+  border-radius: 3px;
+  font-size: 85%;
+  line-height: 1.45;
+  overflow: auto;
+  padding: 16px;
+}
+
+/**
+  * Code blocks
+  */
+
+code {
+  background-color: rgba(27,31,35,.05);
+  border-radius: 3px;
+  font-size: 85%;
+  margin: 0;
+  word-wrap: break-word;
+  padding: .2em .4em;
+  font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+}
+
+pre > code {
+  background-color: transparent;
+  border: 0;
+  display: inline;
+  line-height: inherit;
+  margin: 0;
+  overflow: visible;
+  padding: 0;
+  word-wrap: normal;
+  font-size: 100%;
+}
+
+
+/**
+ * Blockquotes
+ */
+blockquote {
+  margin-left: 30px;
+  margin-top: 0px;
+  margin-bottom: 16px;
+  border-left-width: 3px;
+  padding: 0 1em;
+  color: #828282;
+  border-left: 4px solid #e8e8e8;
+  padding-left: 15px;
+  font-size: 18px;
+  letter-spacing: -1px;
+  font-style: italic;
+}
+blockquote * {
+  font-style: normal !important;
+  letter-spacing: 0;
+  color: #6a737d !important;
+}
+
+/**
+ * Tables
+ */
+table {
+  border-spacing: 2px;
+  display: block;
+  font-size: 14px;
+  overflow: auto;
+  width: 100%;
+  margin-bottom: 16px;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+td {
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+}
+
+th {
+  font-weight: 600;
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+}
+
+tr {
+  background-color: #fff;
+  border-top: 1px solid #c6cbd1;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+
+/**
+ * Others
+ */
+
+img {
+  max-width: 100%;
+}
+
+p {
+  line-height: 24px;
+  font-weight: 400;
+  font-size: 16px;
+  color: #24292e; }
+
+ul {
+  margin-top: 0; }
+
+li {
+  color: #24292e;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5; }
+
+li + li {
+  margin-top: 0.25em; }
+
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  color: #24292e; }
+
+a:visited {
+  color: #0366d6; }
+
+h1, h2, h3 {
+  border-bottom: 1px solid #eaecef;
+  color: #111;
+  /* Darker */ }</style>
+        </body>
+      </html>
