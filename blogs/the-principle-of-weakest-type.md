@@ -20,7 +20,7 @@ class Foo {
 }
 ```
 
-No need for this verbose boilerplate and unnecessary "data hiding". A struct would work fine or a record if you want immutability. Assuming this isn't a widely used 3rd party library, when the requirements change and encapsulation or state management is needed, a struct can be refactored into a class. By using a less powerful type, we've communicated that this is just plain old data. Nothing magical is going on underneath the hood. That information is valuable to readers.
+No need for the extra boilerplate and unused data hiding. Most modern languages have shorthand for getters and setters, but the point of restricting code to only what is necessary still stands. A struct, or a record for immutability, would have worked fine here. Assuming there are no external dependencies, we're free to refactor a struct into a class when state management or encapsulation is needed. By using a less powerful type, we've communicated that this is just plain old data. Nothing magical is going on underneath the hood. That information is valuable to readers.
 
 Another common example are "strategy" classes which have an interface such as `IThingDoer` with a single function, such as `DoThing`.  Sometimes that's fine, but maybe a lambda would have worked better,
 ```
@@ -31,7 +31,7 @@ doSomeCoolStuff(lambda strategy);
 ```
 No need for an entire class which implements a single method.
 
-Structs and records are great at letting the author add additional context _into the types name_. If the language supports constructors on these types, they can guarantee certain properties. Take for example `PlushieOrder`
+Structs and records are great at letting the author add additional context _into the types name_. If the language supports constructors on these types, they can guarantee certain invariants. Take for example `PlushieOrder`
 
 ```
 struct PlushieOrder {
@@ -73,3 +73,4 @@ However, if that's not the case, perhaps a primitive would do just fine.
 Interestingly enough, sometimes the _reverse_ of this rule is not followed. A dictionary is used where a struct was needed to add context for the reader. Or a struct is badly doing the job of a class.
 
 The language itself can often dictate conventions as well. In JavaScript, classes aren't used too much. In Java, classes are probably [_overused_](http://steve-yegge.blogspot.com/2006/03/execution-in-kingdom-of-nouns.html) due to language design.
+

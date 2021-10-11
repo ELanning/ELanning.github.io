@@ -18,8 +18,8 @@ function doSomeCoolStuff(Comment comment) {
 	...
 	string url;
 	switch (comment.kind)
-		"baz": url = "https://foo.com",
-		"bop": url = "https://bop.com",
+		Picture: url = "https://foo.com",
+		Reply: url = "https://bar.com",
 		...
 	...
 }
@@ -58,6 +58,18 @@ function doSomeCoolStuff(Comment comment) {
 	...
 }
 ```
+
+Occasionally, _both_ a switch statement and polymorphism can be combined to reduce the number of change locations. This is exactly what the [factory pattern](https://en.wikipedia.org/wiki/Factory_method_pattern) does. It looks something like this,
+
+```
+Comment getComment(CommentKind kind) {
+	switch (kind)
+		Picture: new PictureComment(...);
+		Reply: new ReplyComment(...);
+}
+```
+
+Without this context the factory pattern looks like an unnecessary layer of indirection. But we've now seen it can consolidate many switch statements into a single location. 
 
 All we've done is move complexity around. Sometimes this is all it takes to reduce overall complexity. If all of these `switch` statements are moved to one central place, we can get a big win by having updates only change one place. More so if it reduces some duplication, or allows us to calculate some value only once.
 

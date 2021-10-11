@@ -19,8 +19,8 @@ If adding a new feature requires one module to add one new reference, but it's a
     ...
     string url;
     switch (comment.kind)
-        "baz": url = "https://foo.com",
-        "bop": url = "https://bop.com",
+        Picture: url = "https://foo.com",
+        Reply: url = "https://bar.com",
         ...
     ...
 }
@@ -55,6 +55,14 @@ It is worth mentioning, there is nothing inherently wrong with switch statements
     ...
 }
 </code></pre>
+<p>Occasionally, <em>both</em> a switch statement and polymorphism can be combined to reduce the number of change locations. This is exactly what the <a href="https://en.wikipedia.org/wiki/Factory_method_pattern">factory pattern</a> does. It looks something like this,</p>
+<pre><code>Comment getComment(CommentKind kind) {
+    switch (kind)
+        Picture: new PictureComment(...);
+        Reply: new ReplyComment(...);
+}
+</code></pre>
+<p>Without this context the factory pattern looks like an unnecessary layer of indirection. But we've now seen it can consolidate many switch statements into a single location. </p>
 <p>All we've done is move complexity around. Sometimes this is all it takes to reduce overall complexity. If all of these <code>switch</code> statements are moved to one central place, we can get a big win by having updates only change one place. More so if it reduces some duplication, or allows us to calculate some value only once.</p>
 <p>Related concepts: <a href="http://www.catb.org/~esr/writings/taoup/html/ch04s02.html#spot_rule">DRY</a>, <a href="https://wiki.c2.com/?SingleResponsibilityPrinciple">SRP</a>, <a href="https://wiki.c2.com/?DependencyInversionPrinciple">DIP</a>.</p>
 <p>¹ Facts and Fallacies of Software Engineering (2002)</p>

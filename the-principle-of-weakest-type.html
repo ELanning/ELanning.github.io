@@ -23,7 +23,7 @@
    private int baz;
 }
 </code></pre>
-<p>No need for this verbose boilerplate and unnecessary "data hiding". A struct would work fine or a record if you want immutability. Assuming this isn't a widely used 3rd party library, when the requirements change and encapsulation or state management is needed, a struct can be refactored into a class. By using a less powerful type, we've communicated that this is just plain old data. Nothing magical is going on underneath the hood. That information is valuable to readers.</p>
+<p>No need for the extra boilerplate and unused data hiding. Most modern languages have shorthand for getters and setters, but the point of restricting code to only what is necessary still stands. A struct, or a record for immutability, would have worked fine here. Assuming there are no external dependencies, we're free to refactor a struct into a class when state management or encapsulation is needed. By using a less powerful type, we've communicated that this is just plain old data. Nothing magical is going on underneath the hood. That information is valuable to readers.</p>
 <p>Another common example are "strategy" classes which have an interface such as <code>IThingDoer</code> with a single function, such as <code>DoThing</code>.  Sometimes that's fine, but maybe a lambda would have worked better,</p>
 <pre><code>doSomeCoolStuff(IThingDoer strategy);
 
@@ -31,7 +31,7 @@
 doSomeCoolStuff(lambda strategy);
 </code></pre>
 <p>No need for an entire class which implements a single method.</p>
-<p>Structs and records are great at letting the author add additional context <em>into the types name</em>. If the language supports constructors on these types, they can guarantee certain properties. Take for example <code>PlushieOrder</code></p>
+<p>Structs and records are great at letting the author add additional context <em>into the types name</em>. If the language supports constructors on these types, they can guarantee certain invariants. Take for example <code>PlushieOrder</code></p>
 <pre><code>struct PlushieOrder {
     constructor(string productGuid) {
         // throw if productGuid is incorrect format.
