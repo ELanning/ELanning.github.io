@@ -12,7 +12,7 @@ Planning didn't seem necessary for her. Classes would naturally emerge as she wr
 >
 > Prince Wang said, "Would that all of my programmers were as wise!"
 >
-> [_The Tao of Programming_](https://www.mit.edu/~xela/tao.html)
+> [_(The Tao of Programming)_](https://www.mit.edu/~xela/tao.html)
 
 Now a days, I've come to see Software Engineering as more of a political sport. As _Peopleware_, _The Mythical Man Month_, and many other people have pointed out- technical challenges rarely kill a project. The difficulty arises from the communication and bureaucratic overhead. However, it is disheartening to see code twisted from these complications. Framework X, Y, and Z _must_ be used. Some inhouse tool or library _must_ be mixed in. All mostly due to political reasons. And of course, so-and-so process must be followed. As we move farther and farther away from expressing reality purely, we move slower and slower. Reality is subjective and there's many good ways to skin a cat, but the above isn't code that writes itself; it's coding by committee.
 
