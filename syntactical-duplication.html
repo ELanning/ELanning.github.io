@@ -1,0 +1,226 @@
+
+      <html>
+        <head>
+          <title>syntactical-duplication.md</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+        </head>
+        <body>
+          <div id='content'>
+      <h1 id="syntactical-duplication">Syntactical Duplication</h1>
+<p>DRY, or "Don't Repeat Yourself" mostly refers to business logic, and sometimes infrastructure logic. Business logic is things such as, "a free tier user can only have 10 dashboards". Infrastructure logic might be connection strings, queue deployment code, or how to generate an authentication token. Business and infrastructure logic can be encoded as a function, variable, or some other method. The important bit is that the "information" lives in one place. If it it is "repeated", maintainers might forget to update both locations.</p>
+<p>However, there's another type of duplication: syntactic duplication. This is when a few lines of code may superficially share a few things. This came up recently when I was writing a simple Python script to clean up some data. The script spun-off a bunch of parallel processes. Each process would handle a chunk of the total files, and write to a local file with some ID. The below code would then combine all those sub-files together.</p>
+<pre><code class="python language-python"># Concat files together.
+concat_files_by_pattern(r"E:\data\Japanese\train-ocr-*", r"E:\data\Japanese\train-ocr-data.txt")
+concat_files_by_pattern(r"E:\data\Japanese\test-ocr-*", r"E:\data\Japanese\test-ocr-data.txt")
+concat_files_by_pattern(r"E:\data\Japanese\eval-ocr-*", r"E:\data\Japanese\eval-ocr-data.txt")
+
+concat_files_by_pattern(r"E:\data\Korean\train-ocr-*", r"E:\data\Korean\train-ocr-data.txt")
+concat_files_by_pattern(r"E:\data\Korean\test-ocr-*", r"E:\data\Korean\test-ocr-data.txt")
+concat_files_by_pattern(r"E:\data\Korean\eval-ocr-*", r"E:\data\Korean\eval-ocr-data.txt")
+
+concat_files_by_pattern(r"E:\data\Chinese\train-ocr-*", r"E:\data\Chinese\train-ocr-data.txt")
+concat_files_by_pattern(r"E:\data\Chinese\test-ocr-*", r"E:\data\Chinese\test-ocr-data.txt")
+concat_files_by_pattern(r"E:\data\Chinese\eval-ocr-*", r"E:\data\Chinese\eval-ocr-data.txt")
+</code></pre>
+<p>As we can see, we can compress this with a for-loop.</p>
+<pre><code class="python language-python">for language in ["Japanese", "Korean", "Chinese"]:
+    concat_files_by_pattern(fr"E:\data\{language}\train-ocr-*", fr"E:\data\{language}\train-ocr-data.txt")
+    concat_files_by_pattern(fr"E:\data\{language}\test-ocr-*", fr"E:\data\{language}\test-ocr-data.txt")
+    concat_files_by_pattern(fr"E:\data\{language}\eval-ocr-*", fr"E:\data\{language}\eval-ocr-data.txt")
+</code></pre>
+<p>Not bad. Let's go further.</p>
+<pre><code class="python language-python">for language in ["Japanese", "Korean", "Chinese"]:
+    for dataset in ["train", "test", "eval"]:
+        concat_files_by_pattern(fr"E:\data\{dataset}\{dataset}-ocr-*", fr"E:\data\{language}\{dataset}-ocr-data.txt")
+</code></pre>
+<p>We've went from 9 lines of code to 3. Less code might appealing, and it may look more aesthetically pleasing. People generally like patterns. But did we really make the code simpler, more maintainable, or more readable? We've traded 9 lines of code, but now we have a doubly nested for-loop, as well as string interpolation. This particular example still feels like an improvement, but reducing syntactical duplication isn't always an improvement. It has to be worked out in code review by multiple sets of eyes, and even then, it's still somewhat subjective.</p>
+<p>Because DRY is abused so much, we've come up with comebacks such as "The Rule of Three", "WET code", "prefer duplication over the wrong abstraction", and many more. I wonder how many times those retorts were referring to syntactical duplication.</p>
+
+          </div>
+          <style type='text/css'>body {
+  font: 400 16px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #111;
+  background-color: #fdfdfd;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-feature-settings: "kern" 1;
+  -moz-font-feature-settings: "kern" 1;
+  -o-font-feature-settings: "kern" 1;
+  font-feature-settings: "kern" 1;
+  font-kerning: normal;
+  padding: 30px;
+}
+
+@media only screen and (max-width: 600px) {
+  body {
+    padding: 5px;
+  }
+
+  body > #content {
+    padding: 0px 20px 20px 20px !important;
+  }
+}
+
+body > #content {
+  margin: 0px;
+  max-width: 900px;
+  border: 1px solid #e1e4e8;
+  padding: 10px 40px;
+  padding-bottom: 20px;
+  border-radius: 2px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+hr {
+  color: #bbb;
+  background-color: #bbb;
+  height: 1px;
+  flex: 0 1 auto;
+  margin: 1em 0;
+  padding: 0;
+  border: none;
+}
+
+/**
+ * Links
+ */
+a {
+  color: #0366d6;
+  text-decoration: none; }
+  a:visited {
+    color: #0366d6; }
+  a:hover {
+    color: #0366d6;
+    text-decoration: underline; }
+
+pre {
+  background-color: #f6f8fa;
+  border-radius: 3px;
+  font-size: 85%;
+  line-height: 1.45;
+  overflow: auto;
+  padding: 16px;
+}
+
+/**
+  * Code blocks
+  */
+
+code {
+  background-color: rgba(27,31,35,.05);
+  border-radius: 3px;
+  font-size: 85%;
+  margin: 0;
+  word-wrap: break-word;
+  padding: .2em .4em;
+  font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+}
+
+pre > code {
+  background-color: transparent;
+  border: 0;
+  display: inline;
+  line-height: inherit;
+  margin: 0;
+  overflow: visible;
+  padding: 0;
+  word-wrap: normal;
+  font-size: 100%;
+}
+
+
+/**
+ * Blockquotes
+ */
+blockquote {
+  margin-left: 30px;
+  margin-top: 0px;
+  margin-bottom: 16px;
+  border-left-width: 3px;
+  padding: 0 1em;
+  color: #828282;
+  border-left: 4px solid #e8e8e8;
+  padding-left: 15px;
+  font-size: 18px;
+  letter-spacing: -1px;
+  font-style: italic;
+}
+blockquote * {
+  font-style: normal !important;
+  letter-spacing: 0;
+  color: #6a737d !important;
+}
+
+/**
+ * Tables
+ */
+table {
+  border-spacing: 2px;
+  display: block;
+  font-size: 14px;
+  overflow: auto;
+  width: 100%;
+  margin-bottom: 16px;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+td {
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+}
+
+th {
+  font-weight: 600;
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+}
+
+tr {
+  background-color: #fff;
+  border-top: 1px solid #c6cbd1;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+
+/**
+ * Others
+ */
+
+img {
+  max-width: 100%;
+}
+
+p {
+  line-height: 24px;
+  font-weight: 400;
+  font-size: 16px;
+  color: #24292e; }
+
+ul {
+  margin-top: 0; }
+
+li {
+  color: #24292e;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5; }
+
+li + li {
+  margin-top: 0.25em; }
+
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  color: #24292e; }
+
+a:visited {
+  color: #0366d6; }
+
+h1, h2, h3 {
+  border-bottom: 1px solid #eaecef;
+  color: #111;
+  /* Darker */ }</style>
+        </body>
+      </html>
