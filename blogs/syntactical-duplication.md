@@ -33,7 +33,7 @@ Not bad. Let's go further.
 ```python
 for language in ["Japanese", "Korean", "Chinese"]:
     for dataset in ["train", "test", "eval"]:
-        concat_files_by_pattern(fr"E:\data\{dataset}\{dataset}-ocr-*", fr"E:\data\{language}\{dataset}-ocr-data.txt")
+        concat_files_by_pattern(fr"E:\data\{language}\{dataset}-ocr-*", fr"E:\data\{language}\{dataset}-ocr-data.txt")
 ```
 
 We've went from 9 lines of code to 3. Less code might appealing, and it may look more aesthetically pleasing. People generally like patterns. But did we really make the code simpler, more maintainable, or more readable? We've traded 9 lines of code, but now we have a doubly nested for-loop, as well as string interpolation. This particular example still feels like an improvement, but reducing syntactical duplication isn't always an improvement. It has to be worked out in code review by multiple sets of eyes, and even then, it's still somewhat subjective.
