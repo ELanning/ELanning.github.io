@@ -36,7 +36,6 @@ for language in ["Japanese", "Korean", "Chinese"]:
         concat_files_by_pattern(fr"E:\data\{language}\{dataset}-ocr-*", fr"E:\data\{language}\{dataset}-ocr-data.txt")
 ```
 
-We've went from 9 lines of code to 3. Less code might appealing, and it may look more aesthetically pleasing. People generally like patterns. But did we really make the code simpler, more maintainable, or more readable? We've traded 9 lines of code, but now we have a doubly nested for-loop, as well as string interpolation. This particular example still feels like an improvement, but reducing syntactical duplication isn't always an improvement. It has to be worked out in code review by multiple sets of eyes, and even then, it's still somewhat subjective.
+We've went from 9 lines of code to 3. Less code might be appealing, and it may look more aesthetically pleasing. People generally like patterns. But did we really make the code simpler, more maintainable, or more readable? We've traded 9 lines of code, but now we have a doubly nested for-loop, as well as string interpolation. This particular example still feels like an improvement, but reducing syntactical duplication isn't always an improvement. It has to be worked out in code review by multiple sets of eyes, and even then, it's still somewhat subjective.
 
 Because DRY is abused so much, we've come up with comebacks such as "The Rule of Three", "WET code", "prefer duplication over the wrong abstraction", and many more. I wonder how many times those retorts were referring to syntactical duplication.
-
